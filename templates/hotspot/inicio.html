@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}Verificar CPF/CNPJ - Rapidin{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4">
+    <div class="w-full max-w-md">
+        <!-- Card Principal -->
+        <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+            <!-- Header com fundo laranja -->
+            <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-8 pt-12 pb-8 text-center">
+                <!-- Logo -->
+                <div class="mb-6 flex justify-center">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO_PNG4-3261VqOOfZzmhsWfV8iot650vVW0aJ.png" 
+                         alt="Rapidin Logo" 
+                         class="h-24 w-auto drop-shadow-lg">
+                </div>
+                
+                <!-- Títulos -->
+                <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">Rapidin</h1>
+                <p class="text-orange-100 text-lg font-medium">Internet Rápida e Confiável</p>
+            </div>
+
+            <!-- Conteúdo do Formulário -->
+            <div class="px-8 py-10 space-y-6">
+                <!-- Descrição -->
+                <div class="text-center">
+                    <p class="text-gray-600 text-base leading-relaxed">
+                        Digite seu <span class="font-semibold text-orange-600">CPF ou CNPJ</span> para acessar a internet
+                    </p>
+                </div>
+
+                <!-- Formulário -->
+                <form method="post" action="{% url 'inicio' %}" class="space-y-5">
+                    {% csrf_token %}
+                    
+                    <!-- Campo de entrada -->
+                    <div class="space-y-2">
+                        <label for="id_cpf_cnpj" class="block text-sm font-semibold text-gray-700">
+                            CPF ou CNPJ
+                        </label>
+                        {{ form.cpf_cnpj }}
+                        
+                        <!-- Estilos para o input -->
+                        <style>
+                            #id_cpf_cnpj {
+                                @apply w-full px-4 py-3 border-2 border-gray-300 rounded-xl 
+                                       focus:border-orange-500 focus:ring-2 focus:ring-orange-200 
+                                       focus:outline-none transition-all duration-200 text-base;
+                            }
+                            #id_cpf_cnpj::placeholder {
+                                @apply text-gray-400;
+                            }
+                        </style>
+                        
+                        <!-- Mensagens de erro -->
+                        {% if form.cpf_cnpj.errors %}
+                            <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+                                <p class="text-sm text-red-700 font-medium">
+                                    {{ form.cpf_cnpj.errors.0 }}
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Botão submit -->
+                    <button type="submit" 
+                            class="w-full bg-gradient-to-r from-orange-500 to-orange-600 
+                                   hover:from-orange-600 hover:to-orange-700 text-white 
+                                   font-bold py-3 px-4 rounded-xl transition-all duration-300 
+                                   transform hover:scale-105 hover:shadow-lg active:scale-95
+                                   text-lg shadow-md">
+                        Verificar Acesso
+                    </button>
+                </form>
+
+                <!-- Informação adicional -->
+                <div class="pt-4 border-t border-gray-200">
+                    <p class="text-center text-xs text-gray-500">
+                        Seus dados estão protegidos e criptografados
+                    </p>
+                </div>
+            </div>
+
+            <!-- Rodapé -->
+            <div class="bg-gradient-to-r from-orange-50 to-orange-50 px-8 py-4 text-center border-t border-orange-100">
+                <p class="text-sm text-gray-700 font-medium">
+                    Clientes Rapidin obtêm acesso imediato à internet
+                </p>
+            </div>
+        </div>
+
+        <!-- Mensagem abaixo do card -->
+        <p class="text-center text-gray-600 text-sm mt-6">
+            Primeira vez aqui? Você será cadastrado automaticamente
+        </p>
+    </div>
+</div>
+{% endblock %}
