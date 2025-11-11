@@ -18,6 +18,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.sessions',
     'hotspot.apps.HotspotConfig',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
