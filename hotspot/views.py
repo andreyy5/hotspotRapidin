@@ -6,111 +6,75 @@ import re
 
 from .forms import CPFCNPJForm, ClienteForm
 from .models import Cliente
-from .utils import HubSoftAPI
+from .utils import validar_cliente_hubsoft
 
 
 class InicioView(TemplateView):
-    """Tela inicial - inserir CPF/CNPJ"""
-    template_name = 'hotspot/inicio.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['form'] = CPFCNPJForm()
-        return context
-
+    template_name = 'hotspot/verificar.html'
+    
     def post(self, request, *args, **kwargs):
-        form = CPFCNPJForm(request.POST)
-        if form.is_valid():
-            cpf_cnpj = form.cleaned_data['cpf_cnpj']
-            request.session['cpf_cnpj'] = cpf_cnpj
-            return redirect('validar')
+        cpf_cnpj = request.POST.get('cpf_cnpj', '').strip()
         
-        context = self.get_context_data(**kwargs)
-        context['form'] = form
-        return self.render_to_response(context)
+        if not cpf_cnpj:
+            messages.error(request, 'Por favor, insira um CPF ou CNPJ')
+            return redirect('inicio')
+        
+        # Armazena na sessão para uso posterior
+        request.session['cpf_cnpj'] = cpf_cnpj
+        
+        # Valida contra HubSoft
+        cliente_data = validar_cliente_hubsoft(cpf_cnpj)
+        
+        if cliente_data:
+            # Cliente encontrado e ativo
+            request.session['cliente_nome'] = cliente_data.get('nome_razao_social', 'Cliente')
+            request.session['cliente_ativo'] = True
+            return redirect('validar')
+        else:
+            # Cliente não encontrado, ir para cadastro
+            request.session['cliente_ativo'] = False
+            return redirect('cadastro')
 
 
 class ValidarView(TemplateView):
-    """Valida CPF/CNPJ contra HubSoft e HubSoft"""
-    template_name = 'hotspot/inicio.html'
-
+    template_name = 'hotspot/sucesso.html'
+    
     def get(self, request, *args, **kwargs):
-        cpf_cnpj = request.session.get('cpf_cnpj')
-        
-        if not cpf_cnpj:
+        # Verifica se o cliente já foi validado
+        if 'cliente_ativo' not in request.session:
             return redirect('inicio')
-
-        # Tenta buscar cliente no HubSoft
-        hubsoft = HubSoftAPI()
-        cliente_hubsoft = hubsoft.search_cliente(cpf_cnpj)
-
-        if cliente_hubsoft:
-            # Cliente existe e tem serviço habilitado
-            request.session['cliente_nome'] = cliente_hubsoft.get('nome', 'Cliente')
-            return redirect('sucesso-existente')
-
-        # Cliente não existe no HubSoft, ir para formulário
-        return redirect('cadastro')
+        
+        context = self.get_context_data(**kwargs)
+        return self.render_to_response(context)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['cliente_nome'] = self.request.session.get('cliente_nome', 'Cliente')
+        context['cliente_ativo'] = self.request.session.get('cliente_ativo', False)
+        return context
 
 
 class CadastroView(FormView):
-    """Tela de cadastro - inserir Nome e Telefone"""
     template_name = 'hotspot/cadastro.html'
     form_class = ClienteForm
-    success_url = reverse_lazy('sucesso-novo')
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        cpf_cnpj = self.request.session.get('cpf_cnpj')
-        if not cpf_cnpj:
-            context['redirect_home'] = True
-        context['cpf_cnpj'] = cpf_cnpj
-        return context
-
+    success_url = reverse_lazy('sucesso_cadastro')
+    
     def form_valid(self, form):
-        cpf_cnpj = self.request.session.get('cpf_cnpj')
+        cpf_cnpj = self.request.session.get('cpf_cnpj', '')
         
-        if not cpf_cnpj:
-            return redirect('inicio')
-
-        # Salva cliente localmente
-        cliente, created = Cliente.objects.get_or_create(
-            cpf_cnpj=cpf_cnpj,
-            defaults={
-                'nome': form.cleaned_data['nome'],
-                'telefone': form.cleaned_data['telefone'],
-            }
-        )
+        # Cria novo cliente
+        cliente = form.save(commit=False)
+        cliente.cpf_cnpj = cpf_cnpj
+        cliente.save()
         
+        self.request.session['cliente_novo'] = True
         return super().form_valid(form)
 
-    def get(self, request, *args, **kwargs):
-        cpf_cnpj = request.session.get('cpf_cnpj')
-        if not cpf_cnpj:
-            return redirect('inicio')
-        return super().get(request, *args, **kwargs)
 
-
-class SucessoExistenteView(TemplateView):
-    """Tela final para cliente existente"""
-    template_name = 'hotspot/sucesso-existente.html'
-
+class SucessoCadastroView(TemplateView):
+    template_name = 'hotspot/sucesso.html'
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['nome'] = self.request.session.get('cliente_nome', 'Cliente')
+        context['cliente_novo'] = self.request.session.get('cliente_novo', False)
         return context
-
-    def get(self, request, *args, **kwargs):
-        if 'cliente_nome' not in request.session:
-            return redirect('inicio')
-        return super().get(request, *args, **kwargs)
-
-
-class SucessoNovoView(TemplateView):
-    """Tela final para novo cliente"""
-    template_name = 'hotspot/sucesso-novo.html'
-
-    def get(self, request, *args, **kwargs):
-        if 'cpf_cnpj' not in request.session:
-            return redirect('inicio')
-        return super().get(request, *args, **kwargs)

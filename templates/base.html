@@ -7,8 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --color-primary: #de760eff;
-            --color-primary-dark: #de760eff;
+            --color-primary: #f97316;
+            --color-primary-dark: #ea580c;
             --color-gray-50: #f9fafb;
             --color-gray-100: #f3f4f6;
             --color-gray-300: #d1d5db;
@@ -23,12 +23,13 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background-color: var(--color-gray-50);
+            background: linear-gradient(to bottom right, var(--color-gray-50), var(--color-gray-100));
             color: var(--color-text);
         }
     </style>
 </head>
 <body>
+    <!-- Updated base.html to use orange color scheme and centered layout -->
     <div class="min-h-screen flex items-center justify-center px-4 py-8">
         <div class="w-full max-w-md">
             {% block content %}{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block title %}Acesso Permitido - Rapidin{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+    <!-- Header com fundo laranja -->
+    <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-8 pt-12 pb-8 text-center">
+        <!-- Logo -->
+        <div class="mb-6 flex justify-center">
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/LOGO_PNG4-3261VqOOfZzmhsWfV8iot650vVW0aJ.png" 
+                 alt="Rapidin Logo" 
+                 class="h-24 w-auto drop-shadow-lg">
+        </div>
+        
+        <!-- Títulos -->
+        <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">Rapidin</h1>
+        <p class="text-orange-100 text-lg font-medium">Bem-vindo!</p>
+    </div>
+
+    <!-- Conteúdo -->
+    <div class="px-8 py-10 space-y-8 text-center">
+        <!-- Ícone de sucesso -->
+        <div class="flex justify-center">
+            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Mensagem -->
+        {% if cliente_ativo and not cliente_novo %}
+            <!-- Cliente Existente -->
+            <div class="space-y-3">
+                <h2 class="text-3xl font-bold text-gray-800">
+                    Oi <span class="text-orange-600">{{ cliente_nome }}</span>,
+                </h2>
+                <p class="text-xl text-gray-600 font-semibold">
+                    Você já é assinante da Rapidin!
+                </p>
+                <p class="text-gray-600 text-base">
+                    Navegue à vontade e aproveite nossa internet rápida e confiável.
+                </p>
+            </div>
+        {% else %}
+            <!-- Cliente Novo -->
+            <div class="space-y-3">
+                <h2 class="text-3xl font-bold text-gray-800">
+                    Agora sim!
+                </h2>
+                <p class="text-xl text-gray-600 font-semibold">
+                    Bem-vindo à Rapidin
+                </p>
+                <p class="text-gray-600 text-base">
+                    Seu cadastro foi completado com sucesso. Pode navegar à vontade!
+                </p>
+            </div>
+        {% endif %}
+
+        <!-- Botão de ação -->
+        <button onclick="window.location.reload()" 
+                class="w-full bg-gradient-to-r from-orange-500 to-orange-600 
+                       hover:from-orange-600 hover:to-orange-700 text-white 
+                       font-bold py-3 px-4 rounded-xl transition-all duration-300 
+                       transform hover:scale-105 hover:shadow-lg active:scale-95
+                       text-lg shadow-md">
+            Iniciar Navegação
+        </button>
+    </div>
+
+    <!-- Rodapé -->
+    <div class="bg-gradient-to-r from-orange-50 to-orange-50 px-8 py-4 text-center border-t border-orange-100">
+        <p class="text-sm text-gray-700 font-medium">
+            Você está conectado com segurança
+        </p>
+    </div>
+</div>
+{% endblock %}
