@@ -62,12 +62,15 @@ class CadastroView(FormView):
     def form_valid(self, form):
         cpf_cnpj = self.request.session.get('cpf_cnpj', '')
         
-        # Cria novo cliente
-        cliente = form.save(commit=False)
-        cliente.cpf_cnpj = cpf_cnpj
-        cliente.save()
+        cliente, created = Cliente.objects.get_or_create(
+            cpf_cnpj=cpf_cnpj,
+            defaults={
+                'nome': form.cleaned_data['nome'],
+                'telefone': form.cleaned_data['telefone']
+            }
+        )
         
-        self.request.session['cliente_novo'] = True
+        self.request.session['cliente_novo'] = created
         return super().form_valid(form)
 
 

@@ -3,6 +3,28 @@ from .models import Cliente
 import re
 
 
+def validar_telefone(valor):
+    """
+    Valida o telefone:
+    - Exatamente 11 dígitos
+    - Não todos os dígitos iguais
+    """
+    # Remove caracteres especiais
+    telefone_limpo = re.sub(r'\D', '', valor)
+    
+    # Verificar se tem exatamente 11 dígitos
+    if len(telefone_limpo) != 11:
+        raise forms.ValidationError('Telefone deve ter exatamente 11 dígitos')
+    
+    # Verificar se todos os dígitos são iguais
+    if len(set(telefone_limpo)) == 1:
+        raise forms.ValidationError('Telefone inválido - dígitos não podem ser todos iguais')
+    
+    # Verificar se começa com 9 (celular válido)
+    if telefone_limpo[2] != '9':
+        raise forms.ValidationError('Telefone deve ser um celular válido (terceiro dígito deve ser 9)')
+
+
 class CPFCNPJForm(forms.Form):
     """Formulário para validação de CPF/CNPJ"""
     cpf_cnpj = forms.CharField(
@@ -35,7 +57,14 @@ class ClienteForm(forms.ModelForm):
             }),
             'telefone': forms.TextInput(attrs={
                 'class': 'w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition',
-                'placeholder': '(11) 99999-9999',
+                'placeholder': '99 9 8442-8630',
                 'inputmode': 'tel',
+                'maxlength': '15',  # added maxlength to prevent extra characters
             }),
         }
+    
+    def clean_telefone(self):
+        telefone = self.cleaned_data.get('telefone')
+        if telefone:
+            validar_telefone(telefone)
+        return telefone
