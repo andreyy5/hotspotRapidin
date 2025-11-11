@@ -27,7 +27,7 @@ class InicioView(TemplateView):
         
         if cliente_data:
             # Cliente encontrado e ativo
-            request.session['cliente_nome'] = cliente_data.get('nome_razao_social', 'Cliente')
+            request.session['cliente_nome'] = cliente_data.get('nome_razaosocial', 'Cliente')
             request.session['cliente_ativo'] = True
             return redirect('validar')
         else:

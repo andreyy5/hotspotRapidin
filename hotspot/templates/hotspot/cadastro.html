@@ -1,141 +1,154 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Cadastro - Rapidin{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% block title %}Cadastro -
+Rapidin{% endblock %} {% block content %}
 <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
-    <!-- Header com fundo laranja -->
-    <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-8 pt-12 pb-8 text-center">
+  <!-- Header com fundo laranja -->
+  <div
+    class="bg-gradient-to-r from-orange-500 to-orange-600 px-8 pt-12 pb-8 text-center"
+  >
         <!-- Logo -->
-        <div class="mb-6 flex justify-center">
-            <img src="{% static './assets/logo.png' %}" 
-                 alt="Rapidin Logo" 
-                 class="h-24 w-auto drop-shadow-lg">
-        </div>
-        
-        <!-- Títulos -->
-        <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">Rapidin</h1>
-        <p class="text-orange-100 text-lg font-medium">Quase lá! Complete seu cadastro</p>
+<div class="mb-1 flex justify-center max-h-30 overflow-hidden">
+    <img
+      src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-TQvOoI1akMrttg1rhZ3xiVIXD6J4wZ.png"
+      alt="Rapidin Logo"
+      class="h-48 w-auto drop-shadow-lg"
+    />
+</div>
+
+    <!-- Títulos -->
+    <p class="text-white text-lg font-medium">
+      Quase lá! Complete seu cadastro
+    </p>
+  </div>
+
+  <!-- Conteúdo do Formulário -->
+  <div class="px-8 py-10 space-y-6">
+    <!-- Descrição -->
+    <div class="text-center">
+      <p class="text-gray-600 text-base leading-relaxed">
+        Precisamos de alguns dados para completar seu cadastro
+      </p>
     </div>
 
-    <!-- Conteúdo do Formulário -->
-    <div class="px-8 py-10 space-y-6">
-        <!-- Descrição -->
-        <div class="text-center">
-            <p class="text-gray-600 text-base leading-relaxed">
-                Precisamos de alguns dados para completar seu cadastro
-            </p>
-        </div>
+    <!-- Formulário -->
+    <form method="post" class="space-y-5">
+      {% csrf_token %}
 
-        <!-- Formulário -->
-        <form method="post" class="space-y-5">
-            {% csrf_token %}
-            
-            <!-- Campo Nome -->
-            <div class="space-y-2">
-                <label for="id_nome" class="block text-sm font-semibold text-gray-700">
-                    Nome Completo
-                </label>
-                {{ form.nome }}
-                
-                <style>
-                    #id_nome {
-                        @apply w-full px-4 py-3 border-2 border-gray-300 rounded-xl 
+      <!-- Campo Nome -->
+      <div class="space-y-2">
+        <label for="id_nome" class="block text-sm font-semibold text-gray-700">
+          Nome Completo
+        </label>
+        {{ form.nome }}
+
+        <style>
+          #id_nome {
+            @apply w-full px-4 py-3 border-2 border-gray-300 rounded-xl 
                                focus:border-orange-500 focus:ring-2 focus:ring-orange-200 
                                focus:outline-none transition-all duration-200 text-base;
-                    }
-                    #id_nome::placeholder {
-                        @apply text-gray-400;
-                    }
-                </style>
-                
-                {% if form.nome.errors %}
-                    <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                        <p class="text-sm text-red-700 font-medium">
-                            {{ form.nome.errors.0 }}
-                        </p>
-                    </div>
-                {% endif %}
-            </div>
+          }
+          #id_nome::placeholder {
+            @apply text-gray-400;
+          }
+        </style>
 
-            <!-- Campo Telefone -->
-            <div class="space-y-2">
-                <label for="id_telefone" class="block text-sm font-semibold text-gray-700">
-                    Telefone
-                </label>
-                {{ form.telefone }}
-                
-                <style>
-                    #id_telefone {
-                        @apply w-full px-4 py-3 border-2 border-gray-300 rounded-xl 
+        {% if form.nome.errors %}
+        <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+          <p class="text-sm text-red-700 font-medium">
+            {{ form.nome.errors.0 }}
+          </p>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Campo Telefone -->
+      <div class="space-y-2">
+        <label
+          for="id_telefone"
+          class="block text-sm font-semibold text-gray-700"
+        >
+          Telefone
+        </label>
+        {{ form.telefone }}
+
+        <style>
+          #id_telefone {
+            @apply w-full px-4 py-3 border-2 border-gray-300 rounded-xl 
                                focus:border-orange-500 focus:ring-2 focus:ring-orange-200 
                                focus:outline-none transition-all duration-200 text-base;
-                    }
-                    #id_telefone::placeholder {
-                        @apply text-gray-400;
-                    }
-                </style>
-                
-                {% if form.telefone.errors %}
-                    <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 rounded">
-                        <p class="text-sm text-red-700 font-medium">
-                            {{ form.telefone.errors.0 }}
-                        </p>
-                    </div>
-                {% endif %}
-            </div>
+          }
+          #id_telefone::placeholder {
+            @apply text-gray-400;
+          }
+        </style>
 
-            <!-- Botão submit -->
-            <button type="submit" 
-                    class="w-full bg-gradient-to-r from-orange-500 to-orange-600 
-                           hover:from-orange-600 hover:to-orange-700 text-white 
-                           font-bold py-3 px-4 rounded-xl transition-all duration-300 
-                           transform hover:scale-105 hover:shadow-lg active:scale-95
-                           text-lg shadow-md">
-                Concluir Cadastro
-            </button>
-        </form>
-
-        <!-- Informação adicional -->
-        <div class="pt-4 border-t border-gray-200">
-            <p class="text-center text-xs text-gray-500">
-                Seus dados estão protegidos e criptografados
-            </p>
+        {% if form.telefone.errors %}
+        <div class="mt-2 p-3 bg-red-50 border-l-4 border-red-500 rounded">
+          <p class="text-sm text-red-700 font-medium">
+            {{ form.telefone.errors.0 }}
+          </p>
         </div>
-    </div>
+        {% endif %}
+      </div>
 
-    <!-- Rodapé -->
-    <div class="bg-gradient-to-r from-orange-50 to-orange-50 px-8 py-4 text-center border-t border-orange-100">
-        <p class="text-sm text-gray-700 font-medium">
-            CPF/CNPJ informado: <span class="font-bold text-orange-600">{{ request.session.cpf_cnpj }}</span>
-        </p>
+      <!-- Botão submit -->
+      <button
+        type="submit"
+        class="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-bold py-3 px-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-lg active:scale-95 text-lg shadow-md"
+      >
+        Concluir Cadastro
+      </button>
+    </form>
+
+    <!-- Informação adicional -->
+    <div class="pt-4 border-t border-gray-200">
+      <p class="text-center text-xs text-gray-500">
+        Seus dados estão protegidos e criptografados
+      </p>
     </div>
+  </div>
+
+  <!-- Rodapé -->
+  <div
+    class="bg-gradient-to-r from-orange-50 to-orange-50 px-8 py-4 text-center border-t border-orange-100"
+  >
+    <p class="text-sm text-gray-700 font-medium">
+      CPF/CNPJ informado:
+      <span class="font-bold text-orange-600"
+        >{{ request.session.cpf_cnpj }}</span
+      >
+    </p>
+  </div>
 </div>
 
 <!-- added JavaScript for automatic phone formatting -->
 <script>
-    const telefoneInput = document.getElementById('id_telefone');
-    
-    telefoneInput.addEventListener('input', function(e) {
-        let valor = e.target.value.replace(/\D/g, '');
-        
-        if (valor.length > 11) {
-            valor = valor.slice(0, 11);
-        }
-        
-        if (valor.length <= 11) {
-            if (valor.length <= 2) {
-                e.target.value = valor;
-            } else if (valor.length <= 7) {
-                e.target.value = valor.slice(0, 2) + ' ' + valor.slice(2);
-            } else if (valor.length <= 11) {
-                e.target.value = valor.slice(0, 2) + ' ' + valor.slice(2, 7) + '-' + valor.slice(7, 11);
-            }
-        } else {
-            e.target.value = valor.slice(0, 2) + ' ' + valor.slice(2, 7) + '-' + valor.slice(7, 11);
-        }
-    });
+  const telefoneInput = document.getElementById("id_telefone");
+
+  telefoneInput.addEventListener("input", function (e) {
+    let valor = e.target.value.replace(/\D/g, "");
+
+    if (valor.length > 11) {
+      valor = valor.slice(0, 11);
+    }
+
+    if (valor.length <= 11) {
+      if (valor.length <= 2) {
+        e.target.value = valor;
+      } else if (valor.length <= 7) {
+        e.target.value = valor.slice(0, 2) + " " + valor.slice(2);
+      } else if (valor.length <= 11) {
+        e.target.value =
+          valor.slice(0, 2) +
+          " " +
+          valor.slice(2, 7) +
+          "-" +
+          valor.slice(7, 11);
+      }
+    } else {
+      e.target.value =
+        valor.slice(0, 2) + " " + valor.slice(2, 7) + "-" + valor.slice(7, 11);
+    }
+  });
 </script>
 
 {% endblock %}
